@@ -96,8 +96,8 @@ livetools.set_target=function(user,pointed_thing)
 	if tar then return true end
 	end
 	local e = minetest.add_entity({x=p.x+(dir.x*0.5),y=p.y+(dir.y*0.5)-0.5,z=p.z+(dir.z*0.5)},"livetools:tool")
-	e:setvelocity({x=dir.x*2, y=dir.y*2, z=dir.z*2})
-	e:setacceleration({x=0, y=-5, z=0})
+	e:set_velocity({x=dir.x*2, y=dir.y*2, z=dir.z*2})
+	e:set_acceleration({x=0, y=-5, z=0})
 	return false
 end
 
@@ -211,7 +211,7 @@ minetest.register_entity("livetools:tool",{
 	end,
 	on_punch=function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 		if self.destry then return self end
-		if dir~=nil then self.object:setvelocity({x = dir.x*3,y = self.object:getvelocity().y,z = dir.z*3}) end
+		if dir~=nil then self.object:set_velocity({x = dir.x*3,y = self.object:get_velocity().y,z = dir.z*3}) end
 		local inv=(self.user and self.user:get_inventory())
 
 		if puncher:is_player() and self.user and self.user:is_player() and puncher:get_player_name()==self.user:get_player_name() then
@@ -230,7 +230,7 @@ minetest.register_entity("livetools:tool",{
 		end
 		if self.object:get_hp()<=0 and self.item and inv==false then
 			self.destry=true
-			minetest.add_item(self.object:get_pos(), self.item):setvelocity({x = math.random(-1, 1),y=5,z = math.random(-1, 1)})
+			minetest.add_item(self.object:get_pos(), self.item):set_velocity({x = math.random(-1, 1),y=5,z = math.random(-1, 1)})
 			return self
 		end
 	end,
@@ -276,8 +276,8 @@ on_step=function(self, dtime)
 				livetools.punch(self,self.object,1000)
 				return self
 			elseif self.able_to_see and d<15 then
-				local v=self.object:getvelocity()
-				self.object:setvelocity({x = v.x,y = 5,z =v.z})
+				local v=self.object:get_velocity()
+				self.object:set_velocity({x = v.x,y = 5,z =v.z})
 				self.able_to_see=false
 				return self
 			else
@@ -309,13 +309,13 @@ on_step=function(self, dtime)
 		end
 		livetools.set_lookat(self,target)
 		livetools.set_walk(self)
-		self.object:setacceleration({x=0, y=-8, z=0})
+		self.object:set_acceleration({x=0, y=-8, z=0})
 		if (livetools.def({x=pos.x+self.mx,y=pos.y,z=pos.z+self.mz},"walkable")
 		and livetools.def({x=pos.x+self.mx,y=pos.y+1,z=pos.z+self.mz},"walkable")==false)
 		or (livetools.def({x=pos.x+self.mx,y=pos.y-1,z=pos.z+self.mz},"walkable")==false
 		and livetools.def({x=pos.x,y=pos.y-1,z=pos.z},"walkable")) then
-			local v=self.object:getvelocity()
-			self.object:setvelocity({x = v.x,y = 5,z =v.z})
+			local v=self.object:get_velocity()
+			self.object:set_velocity({x = v.x,y = 5,z =v.z})
 		end
 
 end,
@@ -377,7 +377,7 @@ livetools.set_walk=function(self)
 	local z =math.cos(yaw) * 1
 	self.mx=x
 	self.mz=z
-	self.object:setvelocity({x = x*4,y = self.object:getvelocity().y,z = z*4})
+	self.object:set_velocity({x = x*4,y = self.object:get_velocity().y,z = z*4})
 	return self
 end
 
